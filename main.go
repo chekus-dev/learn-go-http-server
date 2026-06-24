@@ -33,6 +33,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) { // Handles request to
 	}
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
 	}
 	fmt.Fprintln(w, "This is the root page")
 }
