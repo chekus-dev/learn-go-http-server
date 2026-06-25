@@ -16,7 +16,7 @@ func main() {
 	}
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) { // Haandles request to /home
+func homeHandler(w http.ResponseWriter, r *http.Request) { // Handles request to /home
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
