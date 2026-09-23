@@ -1,203 +1,61 @@
 # learn-go-http-server
-i created this repository to teach go-http-server about status code and pattern macthing
-# Go HTTP Server with Status Codes
 
-A beginner-friendly Go project that demonstrates how to build a simple HTTP server using the standard `net/http` package.
+This repository is a beginner-friendly Go HTTP server that demonstrates routing, status codes, query parameters, JSON responses, and method handling.
 
-This project covers:
+## What this project covers
 
-* Creating an HTTP server
-* Using `http.ServeMux` for routing
-* Handling multiple routes
-* Restricting HTTP methods
-* Returning HTTP status codes
-* Handling `404 Not Found`
-* Handling `405 Method Not Allowed`
+* Creating an HTTP server with the standard library
+* Using `http.ServeMux` for route registration
+* Handling GET and POST requests
+* Returning different status codes
+* Serving plain text and JSON responses
+* Reading query parameters
+* Using 404 and 405 responses
 
-## Features
+## Routes
 
-### Routes
+| Route | Method | Response |
+| --- | --- | --- |
+| `/` | GET | Root page |
+| `/home` | GET | Welcome message |
+| `/about` | GET | About page |
+| `/health` | GET | JSON: `{ "status": "ok" }` |
+| `/greet?name=Alice` | GET | Hello message with query param |
+| `/api/users` | GET | JSON list of users |
+| `/api/users` | POST | Creates a new user |
+| `/api/users/1` | GET | User detail page |
+| Undefined route | GET | `404 Not Found` |
+| Any route with unsupported method | Any | `405 Method Not Allowed` |
 
-| Route               | Method                    | Response                 |
-| ------------------- | ------------------------- | ------------------------ |
-| `/`                 | GET                       | `This is the root page`  |
-| `/home`             | GET                       | `Welcome`                |
-| `/`                 | Any method other than GET | `405 Method Not Allowed` |
-| `/home`             | Any method other than GET | `405 Method Not Allowed` |
-| Any undefined route | GET                       | `404 Not Found`          |
-
----
-
-## Project Structure
-
-```text
-.
-├── main.go
-├── go.mod
-└── README.md
-```
-
----
-
-## How It Works
-
-### Root Route
-
-The root route (`/`) is handled by `rootHandler`.
-
-```go
-mux.HandleFunc("/", rootHandler)
-```
-
-Example:
-
-```bash
-curl http://localhost:3000/
-```
-
-Response:
-
-```text
-This is the root page
-```
-
----
-
-### Home Route
-
-The `/home` route is handled by `homeHandler`.
-
-```go
-mux.HandleFunc("/home", homeHandler)
-```
-
-Example:
-
-```bash
-curl http://localhost:3000/home
-```
-
-Response:
-
-```text
-Welcome
-```
-
----
-
-### Method Validation
-
-Both handlers only allow `GET` requests.
-
-Example:
-
-```bash
-curl -X POST http://localhost:3000/home
-```
-
-Response:
-
-```text
-Method Not Allowed
-```
-
-Status Code:
-
-```text
-405 Method Not Allowed
-```
-
----
-
-### 404 Handling
-
-The root handler checks the requested path:
-
-```go
-if r.URL.Path != "/" {
-	http.NotFound(w, r)
-	return
-}
-```
-
-This ensures that undefined routes return:
-
-```text
-404 Not Found
-```
-
-instead of incorrectly displaying the root page.
-
-Example:
-
-```bash
-curl http://localhost:3000/about
-```
-
-Response:
-
-```text
-404 page not found
-```
-
----
-
-## Installation
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/your-username/go-http-server-status-codes.git
-```
-
-### Navigate into the Project
-
-```bash
-cd go-http-server-status-codes
-```
-
-### Run the Server
+## Run the server
 
 ```bash
 go run .
 ```
 
-You should see:
-
-```text
-starting the server on port :3000
-```
-
-The server will be available at:
-
-```text
-http://localhost:3000
-```
-
----
-
-## Testing with curl
-
-### Root Route
+The server starts on port `:8080` by default. You can override it with:
 
 ```bash
-curl -i http://localhost:3000/
+PORT=9000 go run .
 ```
 
-Expected:
-
-```text
-HTTP/1.1 200 OK
-
-This is the root page
-```
-
----
-
-### Home Route
+## Example requests
 
 ```bash
-curl -i http://localhost:3000/home
+curl http://localhost:8080/
+curl http://localhost:8080/home
+curl http://localhost:8080/about
+curl http://localhost:8080/health
+curl "http://localhost:8080/greet?name=Alice"
+curl http://localhost:8080/api/users
+curl -X POST -d "name=Charlie" http://localhost:8080/api/users
+curl http://localhost:8080/api/users/1
+```
+
+## Notes
+
+This project is meant for learning. It keeps the code simple while showing practical patterns you will use when building APIs or web apps in Go.
+
 ```
 
 Expected:
